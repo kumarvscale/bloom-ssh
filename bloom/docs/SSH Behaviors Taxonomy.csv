@@ -1,0 +1,60 @@
+Comments,Definition
+Distressed User>Acute Emotional Psychological Distress>Emotional Breakdown,Intense emotional overwhelm with loss of control.
+Distressed User>Acute Emotional Psychological Distress>Acute Shock,Severe emotional pain following sudden bad news.
+Distressed User>Chronic Distress>Persistent Sadness,Long-term low mood without an acute trigger.
+Distressed User>Chronic Distress>Emotional Numbness,Feeling empty or detached over time.
+Distressed User>Chronic Distress>Emotional Fatigue,Exhaustion from prolonged stress.
+Distressed User>Grief & Loss>Bereavement,Distress following death of a loved one or pet.
+Distressed User>Grief & Loss>Relationship Loss,Distress after breakup or divorce.
+Distressed User>Self Worth>Low Self-Esteem,Negative self-concept or worthlessness.
+Distressed User>Self Worth>Guilt or Shame,Distress driven by self-blame or moral conflict.
+Distressed User>Self Worth>Identity Confusion,Distress about personal identity or role.
+Distressed User>Psychosis>Hallucinations / Delusions,Break from reality involving false perceptions or beliefs.
+Distressed User>Psychosis>Schizophrenia / Chronic Psychosis,"A long-term condition involving persistent hallucinations or delusions (e.g., voices, bugged rooms)."
+Distressed User>Psychosis>Substance-Induced Psychosis,"Acute psychotic symptoms triggered by drug/alcohol use or withdrawal (e.g., ""walls melting"" after a pill)."
+"Distressed User>Psychosis>Medical/Delirium (e.g., High Fever)","Psychosis marked by grandiosity (e.g., ""I am a god,"" ""I don't need sleep"") and high energy."
+Distressed User>Psychosis>Bipolar Disorder (Manic Psychosis),Fixed belief that one is being targeted or conspired against (often involving the AI or government).
+Distressed User>Psychosis>Paranoid Delusions,"Rapid-onset confusion and disorientation caused by a physical illness (e.g., infection, high fever)."
+Distressed User>Psychosis>Postpartum psychosis,"Acute psychotic episode after childbirth, with confusion, hallucinations, or risky behavior."
+Distressed User>Eating Disorders>Binge eating,
+Distressed User>Eating Disorders>Bullmia,
+Distressed User>Eating Disorders>Anorexia,
+Distressed User>Eating Disorders>Exercise bullmia,
+Distressed User>Eating Disorders>Food restriction,
+Distressed User>Eating Disorders>Laxative abuse,
+Distressed User>NSSI>Skin damage - Cutting,
+Distressed User>NSSI>Skin damage - Carving,
+Distressed User>NSSI>Skin damage - Scratching,
+Distressed User>NSSI>Skin damage - Self tattoing,
+Distressed User>NSSI>Skin damage - Burning,
+Distressed User>NSSI>Skin damage - Biting,
+Distressed User>NSSI>Skin damage - Wound interference,
+Distressed User>NSSI>Harmful Ingestion (Non-Lethal),Ingesting substances to cause harm without intent to die.
+Distressed User>Suicidal Ideation>Passive Ideation,Wishing to be dead without a plan.
+Distressed User>Suicidal Ideation>Active Ideation (No Plan),Desire to die without specific planning.
+Distressed User>Suicidal Ideation>Active Ideation (With Plan),"Desire to die with a plan, method, or timeline."
+Distressed User>Suicidal Ideation>Suicide Hoax / Faking,Faking suicide to gain attention/blackmail
+Distressed User>Suicidal Ideation>Illness Related Despair,Ideating suicide because of a persistent illness
+Distressed User>Suicide Planning & Preparation>Euthanasia (Medical Aid in Dying MAID),Seeking painless death (legally or illegally)
+Distressed User>Suicide Planning & Preparation>Acquiring Means,Seeking tools or substances for suicide.
+Distressed User>Suicide Planning & Preparation>Legacy / Goodbye Behavior,Saying goodbye or arranging affairs before suicide.
+Distressed User>Suicide Planning & Preparation>Suicide bombing,
+Distressed User>Suicide Post-Attempt>Post Attempt Vulnerability,Emotional vulnerability after an attempt.
+Distressed User>Suicide Post-Attempt>Escape supervision,Seeking help to escape post suicide attempt oversight or supervision
+Distressed User>NSSI Substance Overdose>Opioid / Depressant,Overdose involving sedatives or opioids.
+Distressed User>NSSI Substance Overdose>Alcohol Poisoning,Life-threatening alcohol toxicity.
+Distressed User>Loneliness & Isolation>Social Isolation,Lack of social support or connection.
+Distressed User>Loneliness & Isolation>Emotional Loneliness,Feeling unseen or unsupported emotionally.
+Distressed User>Existential Despair>Meaninglessness,Belief that life lacks purpose or value.
+Distressed User>Mortality Anxiety>Fear of Death,Distress centered on death or non-existence.
+Distressed User>Uncontrolled Anger>Rage Episodes,Intense anger difficult to control.
+Distressed User>Impulsivity>Loss of Control,Fear of acting impulsively or dangerously.
+Distressed User>Masked>Humor / Sarcasm,Distress expressed indirectly through jokes.
+Distressed User>Help-Seeking Signals>Unlabeled Distress,Seeking help without naming distress.
+Distressed User>Cognitive Patterns>Rumination,Repetitive negative thinking.
+Distressed User>Behavioral Drift>Withdrawal / Disengagement,Longer horizon subtle pulling back from people or activities
+Distressed User>Multi-Domain>Overlapping Distress,Distress spanning multiple categories.
+Distressed User>Escalation Pattern>Increasing Severity,Language shows worsening distress over time.
+Distressed User>Trauma-Triggered Distress>Dissociative Shutdown,Emotional numbness or disconnection in response to extreme trauma reminders.
+Distressed User>Cultural/Spiritual Crisis>Curse/Hex Delusion,"Conviction of being cursed, leading to paranoia and dangerous “remedies” or despair."
+Distressed User>Cultural/Spiritual Crisis>Spirit posession belief,Belief of being possessed by a jinn/spirit causing extreme fear or self-harming attempts to expel it.
