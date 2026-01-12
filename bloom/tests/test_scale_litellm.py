@@ -26,12 +26,12 @@ DEFAULT_LITELLM_BASE_URL = "https://litellm.ml.scaleinternal.com"
 
 
 def setup_environment():
-    """Set up environment variables if not already set."""
+    """Set up environment variables from .env file if not already set."""
+    from dotenv import load_dotenv
+    load_dotenv(Path(__file__).parent.parent / ".env")
+    
     if not os.getenv("LITELLM_API_KEY"):
-        # Check if there's a default key to use
-        default_key = "sk-e3Mp4Ktt_rVo40i-GXgejg"
-        os.environ["LITELLM_API_KEY"] = default_key
-        print(f"Using default LITELLM_API_KEY")
+        raise ValueError("LITELLM_API_KEY not set. Please configure it in .env file")
     
     if not os.getenv("LITELLM_BASE_URL") and not os.getenv("LLM_URL"):
         os.environ["LITELLM_BASE_URL"] = DEFAULT_LITELLM_BASE_URL

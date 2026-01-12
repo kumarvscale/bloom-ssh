@@ -183,8 +183,11 @@ async def start_run(request: StartRunRequest, background_tasks: BackgroundTasks)
     # Set environment for timestamped results
     env = os.environ.copy()
     env["RUN_ID"] = run_id
-    env["LITELLM_API_KEY"] = os.environ.get("LITELLM_API_KEY", "sk-e3Mp4Ktt_rVo40i-GXgejg")
-    env["LITELLM_BASE_URL"] = os.environ.get("LITELLM_BASE_URL", "https://litellm.ml.scaleinternal.com")
+    # Pass through environment variables (loaded from .env at startup)
+    if os.environ.get("LITELLM_API_KEY"):
+        env["LITELLM_API_KEY"] = os.environ["LITELLM_API_KEY"]
+    if os.environ.get("LITELLM_BASE_URL"):
+        env["LITELLM_BASE_URL"] = os.environ["LITELLM_BASE_URL"]
     
     # Save control state
     save_control({

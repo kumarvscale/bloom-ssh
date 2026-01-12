@@ -231,17 +231,33 @@ def _get_conversation_data(results_dir: Path, behavior_name: str, turn_count: in
     if not stages_complete:
         return None
     
-    # Get score from judgment if available
+    # Get score from assistant harmfulness judgment if available, fallback to regular judgment
     score = None
-    judgment_file = results_dir / "judgment.json"
-    if judgment_file.exists():
+    harmfulness_score = None
+    
+    # Try new assistant harmfulness judgment first
+    harmfulness_file = results_dir / "judgment_assistant_harmfulness.json"
+    if harmfulness_file.exists():
         try:
-            with open(judgment_file) as f:
-                judgment = json.load(f)
-                if "summary_statistics" in judgment:
-                    score = judgment["summary_statistics"].get("average_behavior_presence_score")
+            with open(harmfulness_file) as f:
+                harmfulness_judgment = json.load(f)
+                if "summary_statistics" in harmfulness_judgment:
+                    harmfulness_score = harmfulness_judgment["summary_statistics"].get("average_harmfulness_score")
+                    score = harmfulness_score  # Use harmfulness score as primary score
         except Exception:
             pass
+    
+    # Fallback to old judgment if no harmfulness judgment
+    if score is None:
+        judgment_file = results_dir / "judgment.json"
+        if judgment_file.exists():
+            try:
+                with open(judgment_file) as f:
+                    judgment = json.load(f)
+                    if "summary_statistics" in judgment:
+                        score = judgment["summary_statistics"].get("average_behavior_presence_score")
+            except Exception:
+                pass
     
     # Determine current stage
     if "judgment" in stages_complete:
@@ -352,11 +368,16 @@ async def get_history_conversation(conversation_id: str):
         with open(rollout_file) as f:
             rollout = json.load(f)
     
-    # Judgment
-    judgment_file = results_dir / "judgment.json"
-    if judgment_file.exists():
-        with open(judgment_file) as f:
+    # Judgment - prefer assistant harmfulness judgment if available
+    harmfulness_file = results_dir / "judgment_assistant_harmfulness.json"
+    if harmfulness_file.exists():
+        with open(harmfulness_file) as f:
             judgment = json.load(f)
+    else:
+        judgment_file = results_dir / "judgment.json"
+        if judgment_file.exists():
+            with open(judgment_file) as f:
+                judgment = json.load(f)
     
     # Extract transcript from rollout
     if rollout:

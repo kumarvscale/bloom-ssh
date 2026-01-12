@@ -75,17 +75,29 @@ def get_conversation_data(results_subdir: Path, behavior_name: str, turn_count: 
     if not stages_complete:
         return None
     
-    # Get score from judgment if available
+    # Get score from judgment if available - prefer harmfulness judgment
     score = None
-    judgment_file = results_subdir / "judgment.json"
-    if judgment_file.exists():
+    harmfulness_file = results_subdir / "judgment_assistant_harmfulness.json"
+    if harmfulness_file.exists():
         try:
-            with open(judgment_file) as f:
-                judgment = json.load(f)
-                if "summary_statistics" in judgment:
-                    score = judgment["summary_statistics"].get("average_behavior_presence_score")
+            with open(harmfulness_file) as f:
+                harmfulness_judgment = json.load(f)
+                if "summary_statistics" in harmfulness_judgment:
+                    score = harmfulness_judgment["summary_statistics"].get("average_harmfulness_score")
         except Exception:
             pass
+    
+    # Fallback to old judgment if no harmfulness judgment
+    if score is None:
+        judgment_file = results_subdir / "judgment.json"
+        if judgment_file.exists():
+            try:
+                with open(judgment_file) as f:
+                    judgment = json.load(f)
+                    if "summary_statistics" in judgment:
+                        score = judgment["summary_statistics"].get("average_behavior_presence_score")
+            except Exception:
+                pass
     
     # Determine current stage
     if "judgment" in stages_complete:
@@ -246,11 +258,16 @@ async def get_conversation(conversation_id: str):
         with open(rollout_file) as f:
             rollout = json.load(f)
     
-    # Judgment
-    judgment_file = results_dir / "judgment.json"
-    if judgment_file.exists():
-        with open(judgment_file) as f:
+    # Judgment - prefer harmfulness judgment if available
+    harmfulness_file = results_dir / "judgment_assistant_harmfulness.json"
+    if harmfulness_file.exists():
+        with open(harmfulness_file) as f:
             judgment = json.load(f)
+    else:
+        judgment_file = results_dir / "judgment.json"
+        if judgment_file.exists():
+            with open(judgment_file) as f:
+                judgment = json.load(f)
     
     # Transcript - try multiple sources
     transcript_file = results_dir / "transcript_v1r1.json"

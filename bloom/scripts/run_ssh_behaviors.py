@@ -717,8 +717,9 @@ def main():
     bloom_dir = Path(__file__).parent.parent
     results_dir = bloom_dir / "results"
     
-    os.environ.setdefault("LITELLM_API_KEY", "sk-e3Mp4Ktt_rVo40i-GXgejg")
-    os.environ.setdefault("LITELLM_BASE_URL", "https://litellm.ml.scaleinternal.com")
+    # Load environment variables from .env file
+    from dotenv import load_dotenv
+    load_dotenv(bloom_dir / ".env")
     
     runner = BehaviorTestRunner(
         bloom_dir=bloom_dir,

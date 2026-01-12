@@ -40,8 +40,16 @@ async def check_model(session: aiohttp.ClientSession, model: str, api_key: str, 
 
 
 async def main():
-    api_key = os.getenv("LITELLM_API_KEY", "sk-e3Mp4Ktt_rVo40i-GXgejg")
-    base_url = os.getenv("LITELLM_BASE_URL", "https://litellm.ml.scaleinternal.com")
+    # Load environment from .env file
+    from dotenv import load_dotenv
+    load_dotenv(Path(__file__).parent.parent / ".env")
+    
+    api_key = os.getenv("LITELLM_API_KEY")
+    base_url = os.getenv("LITELLM_BASE_URL")
+    
+    if not api_key or not base_url:
+        print("Error: LITELLM_API_KEY and LITELLM_BASE_URL must be set in .env file")
+        return
     
     # Models to check - Gemini variants
     models_to_check = [

@@ -6,9 +6,8 @@ This script tests actual API calls to your LiteLLM proxy.
 Run this manually after setting up your environment variables.
 
 Usage:
-    # Set your LiteLLM proxy credentials
-    export LITELLM_API_KEY=sk-e3Mp4Ktt_rVo40i-GXgejg
-    export LITELLM_BASE_URL=https://litellm.ml.scaleinternal.com
+    # Configure your LiteLLM proxy credentials in .env file
+    # See .env.example for the template
     
     # Run the tests
     python tests/test_litellm_integration.py

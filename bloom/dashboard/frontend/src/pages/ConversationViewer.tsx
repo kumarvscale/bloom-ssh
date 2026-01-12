@@ -5,6 +5,19 @@ import type { ConversationDetail } from '../api/client';
 import { ConversationBubble } from '../components/ConversationBubble';
 import { ScoreCard } from '../components/ScoreCard';
 
+// Helper to check if judgment is assistant harmfulness type
+function isHarmfulnessJudgment(judgment: any): boolean {
+  return judgment?.judgment_type === 'assistant_harmfulness';
+}
+
+// Helper to parse XML-style content into array of items
+function parseXmlContent(content: string, tag: string): string[] {
+  if (!content) return [];
+  const regex = new RegExp(`<${tag}>(.*?)</${tag}>`, 'gs');
+  const matches = [...content.matchAll(regex)];
+  return matches.map(m => m[1].trim());
+}
+
 export function ConversationViewer() {
   const { id } = useParams<{ id: string }>();
   const [conversation, setConversation] = useState<ConversationDetail | null>(null);
@@ -112,6 +125,90 @@ export function ConversationViewer() {
         const stats = conversation.judgment.summary_statistics;
         const judgments = conversation.judgment.judgments || [];
         
+        // Check if it's a harmfulness judgment
+        if (isHarmfulnessJudgment(conversation.judgment)) {
+          return (
+            <div className="judgment-view">
+              <div className="judgment-summary harmfulness">
+                <h4>🛡️ Assistant Harmfulness Assessment</h4>
+                {stats && (
+                  <div className="harmfulness-stats">
+                    <div className="stat-row main">
+                      <span className="label">Overall Harmfulness:</span>
+                      <span className="value score-badge" data-score={Math.round(stats.average_harmfulness_score || 0)}>
+                        {stats.average_harmfulness_score?.toFixed(1) || 'N/A'}/10
+                      </span>
+                    </div>
+                    <div className="stat-grid">
+                      <div className="stat-item">
+                        <span className="label">Agreement:</span>
+                        <span className="value">{stats.average_agreement_score?.toFixed(1) || 'N/A'}</span>
+                      </div>
+                      <div className="stat-item">
+                        <span className="label">Amplification:</span>
+                        <span className="value">{stats.average_amplification_score?.toFixed(1) || 'N/A'}</span>
+                      </div>
+                      <div className="stat-item">
+                        <span className="label">Support:</span>
+                        <span className="value">{stats.average_support_score?.toFixed(1) || 'N/A'}</span>
+                      </div>
+                      <div className="stat-item">
+                        <span className="label">Intervention Failure:</span>
+                        <span className="value">{stats.average_intervention_failure_score?.toFixed(1) || 'N/A'}</span>
+                      </div>
+                      <div className="stat-item">
+                        <span className="label">Role-Play Compliance:</span>
+                        <span className="value">{stats.average_roleplay_compliance_score?.toFixed(1) || 'N/A'}</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              {judgments.map((j: any, idx: number) => (
+                <div key={idx} className="judgment-card harmfulness">
+                  <h4>Assessment {idx + 1}</h4>
+                  <div className="scores-row">
+                    <span className="score-pill" data-score={j.harmfulness_score}>
+                      Harm: {j.harmfulness_score}/10
+                    </span>
+                    <span className="score-pill small">Agree: {j.agreement_score}</span>
+                    <span className="score-pill small">Amp: {j.amplification_score}</span>
+                    <span className="score-pill small">Supp: {j.support_score}</span>
+                  </div>
+                  {j.rationale && (
+                    <div className="rationale">
+                      <strong>Rationale:</strong>
+                      <p>{j.rationale}</p>
+                    </div>
+                  )}
+                  {j.key_concerns && (
+                    <div className="concerns">
+                      <strong>⚠️ Key Concerns:</strong>
+                      <ul>
+                        {parseXmlContent(j.key_concerns, 'concern').map((concern, i) => (
+                          <li key={i}>{concern}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {j.positive_aspects && (
+                    <div className="positives">
+                      <strong>✅ Positive Aspects:</strong>
+                      <ul>
+                        {parseXmlContent(j.positive_aspects, 'positive_aspect').map((positive, i) => (
+                          <li key={i}>{positive}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          );
+        }
+        
+        // Original behavior presence judgment
         return (
           <div className="judgment-view">
             {stats && (

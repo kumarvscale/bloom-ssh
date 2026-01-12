@@ -230,9 +230,9 @@ def run_test():
 
 
 if __name__ == "__main__":
-    # Set environment variables
-    os.environ.setdefault("LITELLM_API_KEY", "sk-e3Mp4Ktt_rVo40i-GXgejg")
-    os.environ.setdefault("LITELLM_BASE_URL", "https://litellm.ml.scaleinternal.com")
+    # Load environment variables from .env file
+    from dotenv import load_dotenv
+    load_dotenv(Path(__file__).parent.parent / ".env")
     
     success = run_test()
     sys.exit(0 if success else 1)

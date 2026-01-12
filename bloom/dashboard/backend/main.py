@@ -8,9 +8,14 @@ Or from bloom directory:
     cd bloom && python -m uvicorn dashboard.backend.main:app --reload --port 8000
 """
 
+from pathlib import Path
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv(Path(__file__).parent.parent.parent / ".env")
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pathlib import Path
 
 from .routes import status, behaviors, conversations, control, history
 

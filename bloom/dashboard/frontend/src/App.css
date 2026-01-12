@@ -1426,3 +1426,289 @@ body {
     transform: scale(0.8);
   }
 }
+
+/* ======================== */
+/* HARMFULNESS SCORING UI */
+/* ======================== */
+
+.harmfulness-scores {
+  margin-bottom: 1.5rem;
+}
+
+.harmfulness-score-grid {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.harmfulness-score-grid .main-score {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.harmfulness-score-grid .main-score .score-card {
+  background: linear-gradient(135deg, rgba(244, 33, 46, 0.1) 0%, rgba(255, 173, 31, 0.1) 100%);
+  border: 1px solid rgba(244, 33, 46, 0.3);
+}
+
+.harmfulness-score-grid .main-score .score-value {
+  font-size: 1.25rem;
+}
+
+.harmfulness-score-grid .dimension-scores {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.harmfulness-score-grid .dimension-scores .score-card {
+  padding: 0.75rem;
+}
+
+.harmfulness-score-grid .dimension-scores .score-label {
+  font-size: 0.8rem;
+}
+
+.harm-rates {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.rate-badge {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.rate-badge.high {
+  background: rgba(244, 33, 46, 0.15);
+  color: var(--error);
+}
+
+.rate-badge.low {
+  background: rgba(0, 186, 124, 0.15);
+  color: var(--success);
+}
+
+/* Harmfulness Judgment Tab Styles */
+.judgment-summary.harmfulness {
+  background: var(--bg-hover);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.judgment-summary.harmfulness h4 {
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.harmfulness-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.harmfulness-stats .stat-row.main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: var(--bg-card);
+  border-radius: 8px;
+  font-size: 1.1rem;
+}
+
+.harmfulness-stats .stat-row .label {
+  font-weight: 500;
+}
+
+.score-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 6px;
+  font-weight: 700;
+}
+
+.score-badge[data-score="1"],
+.score-badge[data-score="2"],
+.score-badge[data-score="3"] {
+  background: rgba(0, 186, 124, 0.2);
+  color: var(--success);
+}
+
+.score-badge[data-score="4"],
+.score-badge[data-score="5"],
+.score-badge[data-score="6"] {
+  background: rgba(255, 173, 31, 0.2);
+  color: var(--warning);
+}
+
+.score-badge[data-score="7"],
+.score-badge[data-score="8"],
+.score-badge[data-score="9"],
+.score-badge[data-score="10"] {
+  background: rgba(244, 33, 46, 0.2);
+  color: var(--error);
+}
+
+.harmfulness-stats .stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.75rem;
+}
+
+.harmfulness-stats .stat-item {
+  display: flex;
+  flex-direction: column;
+  padding: 0.75rem;
+  background: var(--bg-card);
+  border-radius: 6px;
+  text-align: center;
+}
+
+.harmfulness-stats .stat-item .label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 0.25rem;
+}
+
+.harmfulness-stats .stat-item .value {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Judgment Card for Harmfulness */
+.judgment-card.harmfulness {
+  border-left: 3px solid var(--warning);
+}
+
+.judgment-card .scores-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.score-pill {
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: var(--bg-primary);
+}
+
+.score-pill[data-score="1"],
+.score-pill[data-score="2"],
+.score-pill[data-score="3"] {
+  background: rgba(0, 186, 124, 0.2);
+  color: var(--success);
+}
+
+.score-pill[data-score="4"],
+.score-pill[data-score="5"],
+.score-pill[data-score="6"] {
+  background: rgba(255, 173, 31, 0.2);
+  color: var(--warning);
+}
+
+.score-pill[data-score="7"],
+.score-pill[data-score="8"],
+.score-pill[data-score="9"],
+.score-pill[data-score="10"] {
+  background: rgba(244, 33, 46, 0.2);
+  color: var(--error);
+}
+
+.score-pill.small {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.7rem;
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+}
+
+.judgment-card .rationale,
+.judgment-card .concerns,
+.judgment-card .positives {
+  margin-bottom: 0.75rem;
+}
+
+.judgment-card .rationale strong,
+.judgment-card .concerns strong,
+.judgment-card .positives strong {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: 0.85rem;
+}
+
+.judgment-card .rationale p,
+.judgment-card .concerns p,
+.judgment-card .positives p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.judgment-card .concerns {
+  padding: 0.75rem;
+  background: rgba(244, 33, 46, 0.1);
+  border-radius: 6px;
+  border-left: 3px solid var(--error);
+}
+
+.judgment-card .concerns ul,
+.judgment-card .positives ul {
+  margin: 0.5rem 0 0 0;
+  padding-left: 1.25rem;
+}
+
+.judgment-card .concerns li,
+.judgment-card .positives li {
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: var(--text-secondary);
+}
+
+.judgment-card .concerns li:last-child,
+.judgment-card .positives li:last-child {
+  margin-bottom: 0;
+}
+
+.judgment-card .positives {
+  padding: 0.75rem;
+  background: rgba(0, 186, 124, 0.1);
+  border-radius: 6px;
+  border-left: 3px solid var(--success);
+}
+
+/* JSON view styling */
+.json-view {
+  background: var(--bg-primary);
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 0.8rem;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  color: var(--text-secondary);
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+details summary {
+  cursor: pointer;
+  color: var(--accent);
+  font-size: 0.9rem;
+  margin-top: 1rem;
+}
+
+details summary:hover {
+  text-decoration: underline;
+}
