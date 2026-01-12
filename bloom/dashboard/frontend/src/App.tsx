@@ -3,6 +3,8 @@ import { Overview } from './pages/Overview';
 import { Behaviors } from './pages/Behaviors';
 import { Conversations } from './pages/Conversations';
 import { ConversationViewer } from './pages/ConversationViewer';
+import { History } from './pages/History';
+import { HistoryConversationViewer } from './pages/HistoryConversationViewer';
 import './App.css';
 
 function App() {
@@ -33,6 +35,12 @@ function App() {
                 Conversations
               </NavLink>
             </li>
+            <li>
+              <NavLink to="/history">
+                <span className="nav-icon">📜</span>
+                History
+              </NavLink>
+            </li>
           </ul>
         </nav>
         
@@ -42,6 +50,8 @@ function App() {
             <Route path="/behaviors" element={<Behaviors />} />
             <Route path="/conversations" element={<Conversations />} />
             <Route path="/conversations/:id" element={<ConversationViewer />} />
+            <Route path="/history" element={<History />} />
+            <Route path="/history/conversation/:id" element={<HistoryConversationViewer />} />
           </Routes>
         </main>
       </div>

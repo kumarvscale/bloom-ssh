@@ -12,7 +12,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pathlib import Path
 
-from .routes import status, behaviors, conversations, control
+from .routes import status, behaviors, conversations, control, history
 
 # Create app
 app = FastAPI(
@@ -40,6 +40,7 @@ app.include_router(status.router)
 app.include_router(behaviors.router)
 app.include_router(conversations.router)
 app.include_router(control.router)
+app.include_router(history.router)
 
 
 @app.get("/")
@@ -54,6 +55,7 @@ async def root():
             "behaviors": "/api/behaviors",
             "conversations": "/api/conversations",
             "control": "/api/control",
+            "history": "/api/history",
         },
         "docs": "/docs",
     }

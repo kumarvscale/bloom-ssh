@@ -131,3 +131,46 @@ export const resumeRun = () => api.post<ControlResponse>('/api/control/resume');
 export const stopRun = () => api.post<ControlResponse>('/api/control/stop');
 export const restartRun = (request: StartRunRequest) => api.post<ControlResponse>('/api/control/restart', request);
 
+// History types
+export interface RunSummary {
+  run_id: string;
+  directory: string;
+  timestamp: string;
+  time_only: string;
+  date: string;
+  modified_at: string;
+  total_behaviors: number;
+  completed_tests: number;
+  failed_tests: number;
+  conversation_count: number;
+  config: Record<string, any>;
+}
+
+export interface DateGroup {
+  date: string;
+  date_display: string;
+  runs: RunSummary[];
+  total_completed: number;
+  total_failed: number;
+  total_conversations: number;
+}
+
+export interface HistoryConversation {
+  id: string;
+  run_id: string;
+  behavior: string;
+  turn_count: number;
+  timestamp: string;
+  score: number | null;
+  stage: string;
+  preview: string | null;
+  path: string;
+}
+
+// History API functions
+export const getRunHistory = () => api.get<DateGroup[]>('/api/history/runs');
+export const getRunConversations = (runId: string, params?: { limit?: number; offset?: number }) =>
+  api.get<HistoryConversation[]>(`/api/history/runs/${runId}/conversations`, { params });
+export const getHistoryConversation = (conversationId: string) =>
+  api.get<ConversationDetail>(`/api/history/conversations/${conversationId}`);
+

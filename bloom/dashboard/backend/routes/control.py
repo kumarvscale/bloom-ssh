@@ -65,6 +65,29 @@ def load_state() -> dict:
     return {}
 
 
+def reset_state() -> None:
+    """Reset state file for a fresh run."""
+    fresh_state = {
+        "started_at": datetime.now().isoformat(),
+        "last_updated": datetime.now().isoformat(),
+        "total_behaviors": 0,
+        "turn_counts": [],
+        "completed": {},
+        "current": None,
+        "failed": [],
+        "config": {},
+        "stage_timings": {
+            "understanding": [],
+            "ideation": [],
+            "rollout": [],
+            "judgment": [],
+        },
+    }
+    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+    with open(STATE_FILE, "w") as f:
+        json.dump(fresh_state, f, indent=2)
+
+
 def get_behaviors_list() -> list[dict]:
     """Get list of all behaviors from CSV."""
     import csv
@@ -133,6 +156,9 @@ async def start_run(request: StartRunRequest, background_tasks: BackgroundTasks)
             status_code=400,
             detail="A run is already in progress. Stop it first or wait for it to complete."
         )
+    
+    # Reset state for fresh run
+    reset_state()
     
     # Generate run ID
     run_id = generate_run_id()
