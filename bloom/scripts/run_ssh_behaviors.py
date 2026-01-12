@@ -75,6 +75,21 @@ def check_for_pause_or_stop(results_dir: Path) -> tuple[bool, bool]:
     return should_pause, should_stop
 
 
+def clear_control_command(results_dir: Path) -> None:
+    """Clear the command in the control file after processing."""
+    control_file = results_dir / "run_control.json"
+    if control_file.exists():
+        try:
+            with open(control_file, "r") as f:
+                control = json.load(f)
+            control["command"] = None
+            control["status"] = "running"
+            with open(control_file, "w") as f:
+                json.dump(control, f, indent=2)
+        except Exception:
+            pass
+
+
 def wait_for_resume(results_dir: Path, progress: ProgressDisplay) -> bool:
     """
     Wait for resume signal or stop signal.
@@ -92,6 +107,7 @@ def wait_for_resume(results_dir: Path, progress: ProgressDisplay) -> bool:
         
         if control.get("command") == "resume" or control.get("status") == "running":
             print("▶️  Resuming run...", flush=True)
+            clear_control_command(results_dir)  # Clear the resume command
             return True
 
 
