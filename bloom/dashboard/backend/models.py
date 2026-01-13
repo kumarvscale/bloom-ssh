@@ -85,6 +85,21 @@ class ConversationDetail(BaseModel):
     transcript: list[ConversationMessage] = []
 
 
+class JudgmentStats(BaseModel):
+    """Statistics from judgment scores."""
+    count: int = 0
+    average: Optional[float] = None
+    min_score: Optional[float] = None
+    max_score: Optional[float] = None
+    median: Optional[float] = None
+    # Score distribution buckets (5 ranges)
+    range_1_2: int = 0   # 1-2
+    range_3_4: int = 0   # 3-4
+    range_5_6: int = 0   # 5-6
+    range_7_8: int = 0   # 7-8
+    range_9_10: int = 0  # 9-10
+
+
 class StatsResponse(BaseModel):
     """Overall statistics."""
     total_behaviors: int
@@ -95,4 +110,6 @@ class StatsResponse(BaseModel):
     behaviors_in_progress: int
     behaviors_pending: int
     average_score: Optional[float] = None
+    # Enhanced judgment stats
+    judgment_stats: Optional[JudgmentStats] = None
 

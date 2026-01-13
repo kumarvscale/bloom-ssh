@@ -14,7 +14,7 @@ function App() {
         <nav className="sidebar">
           <div className="logo">
             <span className="logo-icon">🌸</span>
-            <span className="logo-text">SSH Behaviors</span>
+            <span className="logo-text">Bloom SSH</span>
           </div>
           <ul className="nav-links">
             <li>

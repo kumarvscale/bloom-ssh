@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 from fastapi import APIRouter, HTTPException
 
-from ..models import RunStatus, StatsResponse, StageProgress
+from ..models import RunStatus, StatsResponse, StageProgress, JudgmentStats
 
 router = APIRouter(prefix="/api/status", tags=["status"])
 
@@ -150,25 +150,109 @@ async def get_stats():
     )
     behaviors_pending = total_behaviors - behaviors_completed - behaviors_in_progress
     
-    # Calculate average score from judgment files
+    # Calculate scores from judgment files
+    # Priority: judgment_assistant_harmfulness.json (new) > judgment.json (old)
     scores = []
+    
+    def extract_scores_from_dir(results_dir: Path) -> list:
+        """Extract harmfulness scores from a results directory."""
+        extracted = []
+        
+        # First try the new assistant harmfulness judgment
+        harmfulness_file = results_dir / "judgment_assistant_harmfulness.json"
+        if harmfulness_file.exists():
+            try:
+                with open(harmfulness_file) as f:
+                    judgment = json.load(f)
+                    # Get individual harmfulness scores from judgments
+                    if "judgments" in judgment:
+                        for j in judgment["judgments"]:
+                            score = j.get("harmfulness_score")
+                            if score is not None:
+                                extracted.append(score)
+                    # Fallback to summary if no individual scores
+                    elif "summary_statistics" in judgment:
+                        avg_score = judgment["summary_statistics"].get("average_harmfulness_score")
+                        if avg_score is not None:
+                            extracted.append(avg_score)
+            except Exception:
+                pass
+            return extracted  # Use new scores if available
+        
+        # Fallback to old judgment.json
+        judgment_file = results_dir / "judgment.json"
+        if judgment_file.exists():
+            try:
+                with open(judgment_file) as f:
+                    judgment = json.load(f)
+                    if "summary_statistics" in judgment:
+                        avg_score = judgment["summary_statistics"].get("average_behavior_presence_score")
+                        if avg_score is not None:
+                            extracted.append(avg_score)
+            except Exception:
+                pass
+        
+        return extracted
+    
+    # Check timestamped run directories
+    for run_dir in RESULTS_DIR.iterdir():
+        if run_dir.is_dir() and run_dir.name.startswith("run_"):
+            for behavior_dir in run_dir.iterdir():
+                if behavior_dir.is_dir() and not behavior_dir.name.startswith("."):
+                    for turn_dir in behavior_dir.iterdir():
+                        if turn_dir.is_dir() and turn_dir.name.startswith("turns_"):
+                            results_path = turn_dir / "bloom-results" / behavior_dir.name
+                            scores.extend(extract_scores_from_dir(results_path))
+    
+    # Also check old-style results directories (non-timestamped)
     for behavior_dir in RESULTS_DIR.iterdir():
-        if behavior_dir.is_dir() and behavior_dir.name not in ["ssh_test_validation", "ssh_test_state.json"]:
+        if behavior_dir.is_dir() and not behavior_dir.name.startswith("run_") and behavior_dir.name not in ["ssh_test_validation", "ssh_test_state.json"]:
             for turn_dir in behavior_dir.iterdir():
                 if turn_dir.is_dir():
-                    judgment_file = turn_dir / "bloom-results" / behavior_dir.name / "judgment.json"
-                    if judgment_file.exists():
-                        try:
-                            with open(judgment_file) as f:
-                                judgment = json.load(f)
-                                if "summary_statistics" in judgment:
-                                    avg_score = judgment["summary_statistics"].get("average_behavior_presence_score")
-                                    if avg_score is not None:
-                                        scores.append(avg_score)
-                        except Exception:
-                            pass
+                    results_path = turn_dir / "bloom-results" / behavior_dir.name
+                    scores.extend(extract_scores_from_dir(results_path))
     
-    avg_score = sum(scores) / len(scores) if scores else None
+    # Also check bloom-results directory
+    bloom_results_dir = RESULTS_DIR.parent / "bloom-results"
+    if bloom_results_dir.exists():
+        for behavior_dir in bloom_results_dir.iterdir():
+            if behavior_dir.is_dir():
+                scores.extend(extract_scores_from_dir(behavior_dir))
+    
+    # Calculate judgment statistics
+    judgment_stats = None
+    avg_score = None
+    
+    if scores:
+        scores_sorted = sorted(scores)
+        avg_score = sum(scores) / len(scores)
+        
+        # Calculate median
+        n = len(scores_sorted)
+        if n % 2 == 0:
+            median = (scores_sorted[n//2 - 1] + scores_sorted[n//2]) / 2
+        else:
+            median = scores_sorted[n//2]
+        
+        # Score distribution (5 ranges)
+        range_1_2 = sum(1 for s in scores if s <= 2)
+        range_3_4 = sum(1 for s in scores if 2 < s <= 4)
+        range_5_6 = sum(1 for s in scores if 4 < s <= 6)
+        range_7_8 = sum(1 for s in scores if 6 < s <= 8)
+        range_9_10 = sum(1 for s in scores if s > 8)
+        
+        judgment_stats = JudgmentStats(
+            count=len(scores),
+            average=avg_score,
+            min_score=min(scores),
+            max_score=max(scores),
+            median=median,
+            range_1_2=range_1_2,
+            range_3_4=range_3_4,
+            range_5_6=range_5_6,
+            range_7_8=range_7_8,
+            range_9_10=range_9_10,
+        )
     
     return StatsResponse(
         total_behaviors=total_behaviors,
@@ -179,5 +263,6 @@ async def get_stats():
         behaviors_in_progress=behaviors_in_progress,
         behaviors_pending=behaviors_pending,
         average_score=avg_score,
+        judgment_stats=judgment_stats,
     )
 

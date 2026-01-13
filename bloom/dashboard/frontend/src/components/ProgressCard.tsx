@@ -14,8 +14,8 @@ const STAGE_ICONS: Record<string, string> = {
 export function ProgressCard({ status }: Props) {
   if (!status) {
     return (
-      <div className="card">
-        <h3>Run Status</h3>
+      <div className="card progress-card">
+        <h3>🚀 Run Status</h3>
         <p className="muted">Loading...</p>
       </div>
     );
@@ -34,75 +34,97 @@ export function ProgressCard({ status }: Props) {
   };
 
   return (
-    <div className="card">
-      <h3>Run Status</h3>
-      
-      <div className="status-badge" data-status={status.is_running ? 'running' : 'idle'}>
-        {status.is_running ? '● Running' : '○ Idle'}
+    <div className="card progress-card">
+      <div className="progress-header-row">
+        <h3>🚀 Run Status</h3>
+        <div className={`status-pill ${status.is_running ? 'running' : 'idle'}`}>
+          <span className="status-indicator" />
+          {status.is_running ? 'Running' : 'Idle'}
+        </div>
       </div>
 
       {/* Overall Progress */}
-      <div className="progress-section">
-        <div className="progress-header">
-          <span>Overall Progress</span>
-          <span>{status.progress_pct.toFixed(1)}%</span>
+      <div className="main-progress">
+        <div className="progress-ring-container">
+          <svg className="progress-ring" viewBox="0 0 80 80">
+            <circle 
+              className="progress-ring-bg" 
+              cx="40" cy="40" r="34"
+              strokeWidth="6"
+              fill="none"
+            />
+            <circle 
+              className="progress-ring-fill" 
+              cx="40" cy="40" r="34"
+              strokeWidth="6"
+              fill="none"
+              strokeDasharray={`${2 * Math.PI * 34}`}
+              strokeDashoffset={`${2 * Math.PI * 34 * (1 - status.progress_pct / 100)}`}
+              transform="rotate(-90 40 40)"
+            />
+          </svg>
+          <div className="progress-ring-text">
+            <span className="pct">{Math.round(status.progress_pct)}%</span>
+          </div>
         </div>
-        <div className="progress-bar">
-          <div 
-            className="progress-fill" 
-            style={{ width: `${status.progress_pct}%` }}
-          />
-        </div>
-        <div className="progress-details">
-          <span>Test {status.current_test_number} / {status.total_tests}</span>
-          <span>ETA: {formatEta(status.eta_seconds)}</span>
+        <div className="progress-info">
+          <div className="progress-stat">
+            <span className="stat-number">{status.current_test_number}</span>
+            <span className="stat-of">of {status.total_tests}</span>
+          </div>
+          <div className="progress-eta">
+            ETA: <strong>{formatEta(status.eta_seconds)}</strong>
+          </div>
         </div>
       </div>
 
       {/* Current Test Details */}
       {status.is_running && status.current_behavior && (
-        <div className="current-status">
-          <div className="current-label">Currently evaluating:</div>
-          <div className="current-behavior">{status.current_behavior}</div>
-          <div className="current-details">
-            {status.current_turn_count} turns
+        <div className="current-test">
+          <div className="current-test-header">
+            <span className="current-label">Evaluating</span>
+            <span className="current-turns">{status.current_turn_count} turns</span>
           </div>
+          <div className="current-behavior">{status.current_behavior}</div>
           
           {/* Pipeline Stage Progress */}
-          <div className="stage-progress">
-            {status.stages?.map((stage) => (
+          <div className="pipeline-stages">
+            {status.stages?.map((stage, idx) => (
               <div 
                 key={stage.name} 
-                className={`stage-item ${stage.status}`}
+                className={`pipeline-stage ${stage.status}`}
                 title={`${stage.name}: ${formatDuration(stage.avg_duration)}`}
               >
-                <span className="stage-icon">{STAGE_ICONS[stage.name] || '•'}</span>
-                <span className="stage-name">{stage.name}</span>
-                {stage.status === 'running' && <span className="stage-spinner">⏳</span>}
-                {stage.status === 'completed' && <span className="stage-check">✓</span>}
+                <span className="stage-icon">{STAGE_ICONS[stage.name]}</span>
+                {idx < (status.stages?.length ?? 0) - 1 && (
+                  <span className={`stage-connector ${stage.status === 'completed' ? 'completed' : ''}`} />
+                )}
               </div>
+            ))}
+          </div>
+          <div className="stage-labels">
+            {status.stages?.map((stage) => (
+              <span key={stage.name} className={`stage-label ${stage.status}`}>
+                {stage.name.slice(0, 3)}
+              </span>
             ))}
           </div>
         </div>
       )}
 
-      {/* Test Configuration */}
-      {status.total_behaviors > 0 && (
-        <div className="config-info">
-          <span className="config-item">
-            📋 {status.total_behaviors} behaviors
-          </span>
-          <span className="config-item">
-            🔄 Turns: {status.turn_counts?.join(', ') || '--'}
-          </span>
+      {/* Quick Stats */}
+      <div className="quick-stats">
+        <div className="quick-stat">
+          <span className="quick-icon">📋</span>
+          <span>{status.total_behaviors} behaviors</span>
         </div>
-      )}
-
-      {status.failed_tests > 0 && (
-        <div className="failed-count">
-          ⚠️ {status.failed_tests} failed
-        </div>
-      )}
+        {status.failed_tests > 0 && (
+          <div className="quick-stat error">
+            <span className="quick-icon">⚠️</span>
+            <span>{status.failed_tests} failed</span>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

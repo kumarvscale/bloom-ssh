@@ -37,6 +37,19 @@ export interface RunStatus {
   stage_timings: Record<string, number> | null;
 }
 
+export interface JudgmentStats {
+  count: number;
+  average: number | null;
+  min_score: number | null;
+  max_score: number | null;
+  median: number | null;
+  range_1_2: number;   // 1-2
+  range_3_4: number;   // 3-4
+  range_5_6: number;   // 5-6
+  range_7_8: number;   // 7-8
+  range_9_10: number;  // 9-10
+}
+
 export interface Stats {
   total_behaviors: number;
   total_tests: number;
@@ -46,6 +59,7 @@ export interface Stats {
   behaviors_in_progress: number;
   behaviors_pending: number;
   average_score: number | null;
+  judgment_stats: JudgmentStats | null;
 }
 
 export interface BehaviorSummary {

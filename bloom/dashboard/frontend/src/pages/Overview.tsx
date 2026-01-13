@@ -62,7 +62,7 @@ export function Overview() {
   return (
     <div className="page overview">
       <div className="page-header">
-        <h1>SSH Behaviors Dashboard</h1>
+        <h1>Bloom SSH Behaviors Dashboard</h1>
         <span className="auto-refresh-indicator">
           <span className="pulse-dot" />
           Auto-refreshing • {formatLastUpdated()}
